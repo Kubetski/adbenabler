@@ -1,4 +1,4 @@
-﻿name: Build APK
+name: Build APK
 
 on:
   push:
@@ -34,24 +34,13 @@ jobs:
           fi
           chmod +x gradlew
 
-      - name: Build release APK
-        run: ./gradlew assembleRelease
+      - name: Build debug APK (auto-signed with debug key)
+        run: ./gradlew assembleDebug
 
-      - name: Create debug keystore and sign
-        run: |
-          keytool -genkey -v -keystore debug.keystore \
-            -alias debug -keyalg RSA -keysize 2048 -validity 36500 \
-            -storepass android -keypass android \
-            -dname "CN=ADBEnabler, O=SamRootKG, C=US"
-          java -jar $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
-            --ks debug.keystore --ks-key-alias debug \
-            --ks-pass pass:android --key-pass pass:android \
-            app/build/outputs/apk/release/app-release-unsigned.apk
-
-      - name: Compute SHA-256 and prepare release
+      - name: Prepare release files
         run: |
           mkdir -p release
-          cp app/build/outputs/apk/release/app-release-unsigned.apk release/adbenabler.apk
+          cp app/build/outputs/apk/debug/app-debug.apk release/adbenabler.apk
           sha256sum release/adbenabler.apk | cut -d" " -f1 > release/sha256.txt
           echo "=== SHA-256 checksum ==="
           cat release/sha256.txt

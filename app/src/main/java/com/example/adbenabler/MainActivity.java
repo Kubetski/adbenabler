@@ -1,4 +1,4 @@
-﻿package com.example.adbenabler;
+package com.example.adbenabler;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;

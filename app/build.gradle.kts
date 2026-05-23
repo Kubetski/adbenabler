@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
 }
 
 android {
@@ -15,10 +14,20 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        release {
+            storeFile = file("../release.keystore")
+            storePassword = "android"
+            keyAlias = "release"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
